@@ -2,7 +2,7 @@
 
 ## 安装
 
-> composer require love-dj/think-queue-amqp dev-master
+> composer require love-dj/think-queue-amqp dev-main
 
 ## 配置
 
