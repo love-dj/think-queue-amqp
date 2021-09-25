@@ -46,11 +46,7 @@ class Database extends FailedJob
         $exception = (string) $exception;
 
         return $this->getTable()->insertGetId(compact(
-            'connection',
-            'queue',
-            'payload',
-            'exception',
-            'fail_time'
+            'connection', 'queue', 'payload', 'exception', 'fail_time'
         ));
     }
 

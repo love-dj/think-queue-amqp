@@ -89,7 +89,7 @@ class Amqp extends Connector
         return new self($channel, $config['queue'], $config['retry_after'] ?? 60, $config['block_for'] ?? null);
     }
 
-    public function size($queue = null)
+    public function size($queue)
     {
         //$queue = $this->getQueue($queue);
 
@@ -171,10 +171,10 @@ class Amqp extends Connector
 
     //拉取模式,默认模式
     public function popAmqp($queue = null)
-    {
-        //Log::info("Queue:step:3");
-       // $e = new Exception;
-       //var_dump($e->getTraceAsString()); exit();
+    {   //Log::info("Queue:step:3");
+
+//        $e = new Exception;
+//        var_dump($e->getTraceAsString()); exit();
 
         if (!is_null($this->blockFor)) {
             return;
@@ -226,6 +226,7 @@ class Amqp extends Connector
         //消费者模式
         $callback = function($msg) use ($_this, $work, $lastRestart, $connection, $queue, $delay, $maxTries){
             //echo date('Y-m-d H:i:s')." [x] Received",$msg->body,PHP_EOL;
+
             $nextJob = $msg->body;
             if ($nextJob) {
                 $job = $nextJob;
@@ -253,9 +254,9 @@ class Amqp extends Connector
      * @return mixed
      */
     public function release($queue, $job, $delay)
-    {
-        //Log::info("Queue:step:4");
-        return $this->pushToAmqp($queue, $job->payload, $delay, $job->attempts);
+    {   Log::info("Queue:step:4");
+        //return $this->pushToAmqp($queue, $job->payload, $delay, $job->attempts);
+        return;
     }
 
     /**

@@ -47,6 +47,7 @@ class Amqp extends Job
         $this->connection = $connection;
         $this->amqp       = $amqp;
         $this->msg        = $msg;
+        
         $this->decoded = $this->payload();
     }
 

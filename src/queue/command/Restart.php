@@ -28,6 +28,18 @@ class Restart extends Command
     public function handle(Cache $cache)
     {
         $cache->set('think:queue:restart', $this->currentTime());
+
+        //用于解决队列重启放入的空队列
+        $restartQueue = cache('think:queue:restartQueue');
+        //var_dump($restartQueue);
+        cache('think:queue:restartQueue', [], 86400);
+        if (!empty($restartQueue)){
+            $pushs = $this->app['queue']->connection("amqp");
+            foreach ($restartQueue as $qname) {
+                $pushs->push("app\common\job\DefaultQueue", '', $qname);
+            }
+        }
+        
         $this->output->info("Broadcasting queue restart signal.");
     }
 }
