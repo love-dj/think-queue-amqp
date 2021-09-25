@@ -2,7 +2,7 @@
 
 ## 安装
 
-> composer require love-dj/think-queue-amqp dev-main
+> composer require topthink/think-queue
 
 ## 配置
 
