@@ -122,7 +122,8 @@ class Worker
         while (true) {
 
             $job = $this->getNextJob(
-                $this->queue->connection($connection), $queue
+                $this->queue->connection($connection),
+                $queue
             );
 
             if ($this->supportsAsyncSignals()) {
@@ -347,7 +348,9 @@ class Worker
             $this->event->trigger(new JobProcessing($connection, $job));
 
             $this->markJobAsFailedIfAlreadyExceedsMaxAttempts(
-                $connection, $job, (int) $maxTries
+                $connection,
+                $job,
+                (int) $maxTries
             );
 
             $job->fire();
@@ -434,7 +437,9 @@ class Worker
             $job->failed($e);
         } finally {
             $this->event->trigger(new JobFailed(
-                $connection, $job, $e ?: new RuntimeException('ManuallyFailed')
+                $connection,
+                $job,
+                $e ?: new RuntimeException('ManuallyFailed')
             ));
         }
     }

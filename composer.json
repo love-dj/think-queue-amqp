@@ -24,12 +24,10 @@
     "minimum-stability": "dev",
     "require": {
         "ext-json": "*",
-        "topthink/think-helper": "^3.0.4",
-        "topthink/framework": "^6.0.0",
-        "topthink/think-factory": "^1.0.0",
+        "php-amqplib/php-amqplib": "^2.12.1",
+        "topthink/framework": "^6.0",
         "symfony/process": "^4.2",
-        "nesbot/carbon": "^2.16",
-        "php-amqplib/php-amqplib": "^2.12.1"
+        "nesbot/carbon": "^2.16"
     },
     "extra": {
         "think": {

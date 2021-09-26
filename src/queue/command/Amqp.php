@@ -53,7 +53,7 @@ class Amqp extends Command
 
     /**
      * Execute the console command.
-     * @param Input  $input
+     * @param Input $input
      * @param Output $output
      * @return int|null|void
      */
@@ -61,7 +61,10 @@ class Amqp extends Command
     {
         $connection = $input->getArgument('connection') ?: $this->app->config->get('queue.default');
 
-        $queue = $input->getOption('queue') ?: $this->app->config->get("queue.connections.{$connection}.queue", 'default');
+        $queue = $input->getOption('queue') ?: $this->app->config->get(
+            "queue.connections.{$connection}.queue",
+            'default'
+        );
         $delay = $input->getOption('delay');
         $sleep = $input->getOption('sleep');
         $tries = $input->getOption('tries');
@@ -71,7 +74,7 @@ class Amqp extends Command
         if ($input->getOption('once')) {
             $this->worker->runNextJob($connection, $queue, $delay, $sleep, $tries);
         } else {
-            $memory  = $input->getOption('memory');
+            $memory = $input->getOption('memory');
             $timeout = $input->getOption('timeout');
             $this->worker->amqpDaemon($connection, $queue, $delay, $sleep, $tries, $memory, $timeout);
         }
@@ -82,19 +85,28 @@ class Amqp extends Command
      */
     protected function listenForEvents()
     {
-        $this->app->event->listen(JobProcessing::class, function (JobProcessing $event) {
-            $this->writeOutput($event->job, 'starting');
-        });
+        $this->app->event->listen(
+            JobProcessing::class,
+            function (JobProcessing $event) {
+                $this->writeOutput($event->job, 'starting');
+            }
+        );
 
-        $this->app->event->listen(JobProcessed::class, function (JobProcessed $event) {
-            $this->writeOutput($event->job, 'success');
-        });
+        $this->app->event->listen(
+            JobProcessed::class,
+            function (JobProcessed $event) {
+                $this->writeOutput($event->job, 'success');
+            }
+        );
 
-        $this->app->event->listen(JobFailed::class, function (JobFailed $event) {
-            $this->writeOutput($event->job, 'failed');
+        $this->app->event->listen(
+            JobFailed::class,
+            function (JobFailed $event) {
+                $this->writeOutput($event->job, 'failed');
 
-            $this->logFailedJob($event);
-        });
+                $this->logFailedJob($event);
+            }
+        );
     }
 
     /**
@@ -121,19 +133,22 @@ class Amqp extends Command
     /**
      * Format the status output for the queue worker.
      *
-     * @param Job    $job
+     * @param Job $job
      * @param string $status
      * @param string $type
      * @return void
      */
     protected function writeStatus(Job $job, $status, $type)
     {
-        $this->output->writeln(sprintf(
-            "<{$type}>[%s][%s] %s</{$type}> %s",
-            date('Y-m-d H:i:s'),
-            $job->getJobId(),
-            str_pad("{$status}:", 11), $job->getName()
-        ));
+        $this->output->writeln(
+            sprintf(
+                "<{$type}>[%s][%s] %s</{$type}> %s",
+                date('Y-m-d H:i:s'),
+                $job->getJobId(),
+                str_pad("{$status}:", 11),
+                $job->getName()
+            )
+        );
     }
 
     /**
@@ -143,8 +158,10 @@ class Amqp extends Command
     protected function logFailedJob(JobFailed $event)
     {
         $this->app['queue.failer']->log(
-            $event->connection, $event->job->getQueue(),
-            $event->job->getRawBody(), $event->exception
+            $event->connection,
+            $event->job->getQueue(),
+            $event->job->getRawBody(),
+            $event->exception
         );
     }
 
